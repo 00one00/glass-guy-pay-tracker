@@ -4,8 +4,12 @@ import DayDetails from './components/DayDetails';
 import WeeklySummary from './components/WeeklySummary';
 import PaymentTracker from './components/PaymentTracker';
 import WeekHistory from './components/WeekHistory';
+import Login from './components/Login';
 import { getWeekBounds, getWeekData, formatDate, calculateWeeklySummary } from './utils/dateUtils';
 import { loadData, saveData, loadPaymentData, savePaymentData } from './utils/storage';
+import { loadWorkData, saveWorkData, loadPaymentData as loadFirebasePaymentData, savePaymentData as saveFirebasePaymentData } from './firebase/db';
+import { useAuth } from './contexts/AuthContext';
+import { logoutUser } from './firebase/auth';
 import './styles/index.css';
 
 function App() {
@@ -15,46 +19,79 @@ function App() {
   const [weekBounds, setWeekBounds] = useState(getWeekBounds(new Date()));
   const [viewingHistoricalWeek, setViewingHistoricalWeek] = useState(false);
   const [showWeekHistory, setShowWeekHistory] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  const { currentUser, isAuthenticated, userId } = useAuth();
 
   useEffect(() => {
-    // Load data from localStorage on first render
-    const savedData = loadData();
-    if (savedData) {
-      setWorkData(savedData);
-    }
+    const loadUserData = async () => {
+      setLoading(true);
+      
+      try {
+        let workDataResult = {};
+        let paymentDataResult = {};
+        
+        if (isAuthenticated && userId) {
+          // Load data from Firebase if user is authenticated
+          workDataResult = await loadWorkData(userId) || {};
+          paymentDataResult = await loadFirebasePaymentData(userId) || {};
+        } else {
+          // Fall back to localStorage if not authenticated
+          workDataResult = loadData() || {};
+          paymentDataResult = loadPaymentData() || {};
+        }
+        
+        setWorkData(workDataResult);
+        setPaymentData(paymentDataResult);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    // Load payment data
-    const savedPaymentData = loadPaymentData();
-    if (savedPaymentData) {
-      setPaymentData(savedPaymentData);
-    }
-  }, []);
+    loadUserData();
+  }, [isAuthenticated, userId]);
 
   useEffect(() => {
     // Update week bounds when selected date changes
     setWeekBounds(getWeekBounds(selectedDate));
   }, [selectedDate]);
 
-  const updateWorkDay = (date, dayData) => {
+  const updateWorkDay = async (date, dayData) => {
     const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD format
     const newWorkData = {
       ...workData,
       [dateStr]: dayData
     };
     setWorkData(newWorkData);
-    saveData(newWorkData);
+    
+    if (isAuthenticated && userId) {
+      // Save to Firebase if authenticated
+      await saveWorkData(userId, newWorkData);
+    } else {
+      // Fall back to localStorage
+      saveData(newWorkData);
+    }
   };
 
-  const deleteWorkDay = (date) => {
+  const deleteWorkDay = async (date) => {
     const dateStr = date.toISOString().split('T')[0];
     const newWorkData = { ...workData };
     delete newWorkData[dateStr];
     setWorkData(newWorkData);
-    saveData(newWorkData);
+    
+    if (isAuthenticated && userId) {
+      // Save to Firebase if authenticated
+      await saveWorkData(userId, newWorkData);
+    } else {
+      // Fall back to localStorage
+      saveData(newWorkData);
+    }
   };
   
   // Update payment data for a specific week
-  const updatePaymentData = (weekId, weekPaymentData) => {
+  const updatePaymentData = async (weekId, weekPaymentData) => {
     // Clone the existing payment data
     const newPaymentData = {
       ...paymentData,
@@ -72,7 +109,14 @@ function App() {
     );
     
     setPaymentData(newPaymentData);
-    savePaymentData(newPaymentData);
+    
+    if (isAuthenticated && userId) {
+      // Save to Firebase if authenticated
+      await saveFirebasePaymentData(userId, newPaymentData);
+    } else {
+      // Fall back to localStorage
+      savePaymentData(newPaymentData);
+    }
   };
 
   // Handle selecting a week from history
@@ -110,9 +154,34 @@ function App() {
     lastUpdated: new Date().toISOString()
   };
 
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  // If not authenticated, show login screen
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      // Auth state change will be handled by the AuthContext
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
     <div className="app-container">
       <h1>Glass Guy Pay Tracker</h1>
+      
+      <div className="user-info">
+        <p>Logged in as: {currentUser?.displayName || currentUser?.email}</p>
+        <button className="btn btn-secondary logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
       
       <div className="week-navigation">
         {viewingHistoricalWeek && (

@@ -16,6 +16,8 @@ A simple mobile-friendly web application for tracking work days at an auto glass
 - Browse historical weekly work records
 - Mobile-friendly CSV and HTML exports
 - Mobile-friendly design
+- Firebase integration for authentication and data storage
+- Multi-user support with secure data isolation
 
 ## Usage Instructions
 
@@ -26,12 +28,20 @@ A simple mobile-friendly web application for tracking work days at an auto glass
    npm install
    ```
 
-2. Start the development server:
+2. Configure Firebase (see [Firebase Setup](#firebase-setup) below)
+
+3. Start the development server:
    ```
    npm start
    ```
 
-3. Open your browser and navigate to http://localhost:3000
+4. Open your browser and navigate to http://localhost:3000
+
+### Authentication
+
+1. Register a new account using your email and password
+2. Log in with your registered account
+3. Use the password reset feature if you forget your password
 
 ### Adding a Work Day
 
@@ -145,10 +155,98 @@ serve -s build
 
 ## Data Storage
 
-All data is stored locally in your browser's localStorage. This means:
+The application uses Firebase Firestore for data storage and authentication:
+
+- Data is securely stored in the cloud and synchronized across devices
+- Authentication ensures only authorized users can access their data
+- Each user's data is isolated and cannot be accessed by other users
+- Firestore security rules prevent unauthorized access to data
+
+For local development or if Firebase is not configured, the application falls back to using localStorage:
 - Data will persist across browser sessions
 - Data will not be shared between devices
 - Clearing your browser data will also clear the app data
+
+## Firebase Setup
+
+### 1. Create a Firebase Project
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/)
+2. Click "Add project" or select an existing project
+3. Follow the setup wizard to create your project
+   - Enter a project name
+   - Choose whether to enable Google Analytics (optional)
+   - Accept the terms and click "Create Project"
+
+### 2. Set Up Firebase Authentication
+
+1. In your Firebase project console, navigate to "Authentication" in the left sidebar
+2. Click "Get started"
+3. Enable the "Email/Password" sign-in method
+   - Click on "Email/Password"
+   - Toggle the "Enable" switch to on
+   - Click "Save"
+
+### 3. Create Firestore Database
+
+1. In your Firebase project console, navigate to "Firestore Database" in the left sidebar
+2. Click "Create database"
+3. Choose a starting mode:
+   - For development, select "Start in test mode"
+   - For production, select "Start in production mode"
+4. Choose a location for your database (select the closest region to your users)
+5. Click "Enable"
+
+### 4. Get Your Firebase Configuration
+
+1. In your Firebase project console, click on the gear icon (⚙️) near "Project Overview" and select "Project settings"
+2. Scroll down to the "Your apps" section
+3. If you haven't already added a web app, click on the web icon (</>) to add one
+   - Enter a nickname for your app (e.g., "Glass Guy Pay Tracker")
+   - (Optional) Check "Also set up Firebase Hosting"
+   - Click "Register app"
+4. Copy the Firebase configuration object
+
+### 5. Add Configuration to Your App
+
+Open the file `src/firebase/config.js` and replace the placeholder values with your actual Firebase configuration:
+
+```javascript
+const firebaseConfig = {
+  apiKey: "YOUR_ACTUAL_API_KEY",
+  authDomain: "your-actual-project-id.firebaseapp.com",
+  projectId: "your-actual-project-id",
+  storageBucket: "your-actual-project-id.appspot.com",
+  messagingSenderId: "YOUR_ACTUAL_SENDER_ID",
+  appId: "YOUR_ACTUAL_APP_ID"
+};
+```
+
+### 6. Set Up Firestore Security Rules (For Production)
+
+1. In your Firebase project console, navigate to "Firestore Database" → "Rules"
+2. Add these rules that allow authenticated users to access only their own data:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      match /data/{document=**} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+      
+      match /workDays/{document=**} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}
+```
+
+3. Click "Publish"
 
 ## Technical Notes
 
@@ -161,3 +259,5 @@ All data is stored locally in your browser's localStorage. This means:
 - Week history feature allows browsing and reviewing all historical weekly work records
 - CSV exports are formatted for optimal readability on mobile devices
 - HTML exports provide a styled, mobile-friendly alternative for better viewing on smartphones
+- Firebase Authentication provides secure user authentication
+- Firestore database ensures data persistence across devices and browsers

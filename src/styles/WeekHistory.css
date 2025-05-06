@@ -1,0 +1,99 @@
+.week-history {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.week-history h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.weeks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.week-item {
+  padding: 12px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  border-left: 4px solid #ccc;
+}
+
+.week-item:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.week-item.selected {
+  background-color: #e6f7ff;
+  border-left-color: #1890ff;
+}
+
+.week-date-range {
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.week-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.payment-status {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.payment-status.paid {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.payment-status.partial {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.payment-status.unpaid {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.week-item.paid {
+  border-left-color: #28a745;
+}
+
+.week-item.partial {
+  border-left-color: #ffc107;
+}
+
+.week-item.unpaid {
+  border-left-color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .weeks-list {
+    max-height: 300px;
+  }
+} 

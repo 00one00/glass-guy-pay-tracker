@@ -1,0 +1,124 @@
+.react-calendar {
+  width: 100%;
+  max-width: 100%;
+  background: white;
+  border: none;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 10px;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  color: #333;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: #f0f0f0;
+}
+
+.react-calendar__navigation button[disabled] {
+  background-color: #f0f0f0;
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: #d10000;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #bbb;
+}
+
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 10px 6px;
+  background: none;
+  text-align: center;
+  line-height: 16px;
+  border: 1px solid #eee;
+  height: 80px;
+  position: relative;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #f0f0f0;
+}
+
+.react-calendar__tile--now {
+  background: #fffbdb;
+}
+
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background: #ffe688;
+}
+
+.react-calendar__tile--active {
+  background: #007bff;
+  color: white;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: #0069d9;
+}
+
+/* Custom styles for work status */
+.work-status-full {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.work-status-half {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+
+.tile-content {
+  font-size: 0.8em;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  text-align: center;
+}
+
+.jobs-count {
+  font-weight: bold;
+}
+
+.pay-amount {
+  color: #28a745;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .react-calendar__tile {
+    padding: 8px 4px;
+    height: 60px;
+    font-size: 0.9em;
+  }
+  
+  .tile-content {
+    font-size: 0.7em;
+  }
+} 

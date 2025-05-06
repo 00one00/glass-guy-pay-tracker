@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/glass-guy-pay-tracker/static/css/main.54e22140.css",
+    "main.js": "/glass-guy-pay-tracker/static/js/main.16dd842c.js",
+    "static/js/453.a79b11cf.chunk.js": "/glass-guy-pay-tracker/static/js/453.a79b11cf.chunk.js",
+    "index.html": "/glass-guy-pay-tracker/index.html",
+    "main.54e22140.css.map": "/glass-guy-pay-tracker/static/css/main.54e22140.css.map",
+    "main.16dd842c.js.map": "/glass-guy-pay-tracker/static/js/main.16dd842c.js.map",
+    "453.a79b11cf.chunk.js.map": "/glass-guy-pay-tracker/static/js/453.a79b11cf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.54e22140.css",
+    "static/js/main.16dd842c.js"
+  ]
+}

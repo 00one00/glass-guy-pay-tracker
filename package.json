@@ -5,10 +5,10 @@
   "description": "A mobile-friendly web application for tracking work days, pay rates, and jobs at an auto glass business",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/glass-guy-pay-tracker.git"
+    "url": "git+https://github.com/REPLACE_WITH_YOUR_GITHUB_USERNAME/glass-guy-pay-tracker.git"
   },
-  "homepage": "https://yourusername.github.io/glass-guy-pay-tracker",
-  "author": "Drake Duncan",
+  "homepage": "https://REPLACE_WITH_YOUR_GITHUB_USERNAME.github.io/glass-guy-pay-tracker",
+  "author": "Rockstar Auto Glass Systems",
   "license": "MIT",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -48,6 +48,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.1.1"
   }
 }

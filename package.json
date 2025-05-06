@@ -5,9 +5,9 @@
   "description": "A mobile-friendly web application for tracking work days, pay rates, and jobs at an auto glass business",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/REPLACE_WITH_YOUR_GITHUB_USERNAME/glass-guy-pay-tracker.git"
+    "url": "git+https://github.com/00one00/glass-guy-pay-tracker.git"
   },
-  "homepage": "https://REPLACE_WITH_YOUR_GITHUB_USERNAME.github.io/glass-guy-pay-tracker",
+  "homepage": "https://00one00.github.io/glass-guy-pay-tracker",
   "author": "Rockstar Auto Glass Systems",
   "license": "MIT",
   "dependencies": {
